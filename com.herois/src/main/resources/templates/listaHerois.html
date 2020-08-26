@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>Herois</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+		 <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <link rel="stylesheet" href="style/styleCss.css"/>
+</head>
+<body>
+	<h1>Lista de Herois</h1>
+
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table class="table table-sm table-striped table-hover table-bordered">
+					<thead>
+						<tr>
+							<th>Código</th>
+							<th>Nome</th>
+							<th>Universo</th>
+							<th>Data</th>
+							<th>Poderes</th>
+							<th>Operações</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="heroi : ${herois}">
+							<td th:text="${heroi.codigo}"></td>
+							<td th:text="${heroi.nome}"></td>
+							<td th:text="${heroi.universo}"></td>
+							<td th:text="${heroi.dataCriacao}"></td>
+							<td th:text="${heroi.poderes}"></td>
+							<td>
+								<div class="btn-group pull-right" id=del>
+							   		<a class="delete btn btn-sm btn-danger" th:href="@{/api/heroi/delete/{id}(id=${heroi.codigo})}">Excluir</a>
+							   </div>
+							</td>
+						</tr>
+					</tbody>
+				</table>s
+			</div>
+		</div>
+	<div class="panel-footer">
+			<a class="btn btn-sm btn-success" th:href="@{/api/heroi/form}" >Adicionar</a>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+function reply_click(clicked_id)
+{
+    alert(clicked_id);
+}
+</script>
+</html>

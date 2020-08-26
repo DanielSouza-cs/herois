@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Herois</title>
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Produtos</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    </link>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css" media="screen,projection" />
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style/styleCss.css" />
+
+</head>
+
+<body>
+    <h1>Cadastrar Heroi</h1>
+    <h3><a href="/api/heroi" class="waves-effect waves-light btn"><i class="material-icons left">list
+            </i>Lista de Herois</a></h3>
+
+    <form method="post" id="form">
+        Nome: <input type="text" value="" name="nome"  id="nome"/>
+        Poderes: <td data-name="poder">
+            <select name="poder" id="poder">
+            </select>
+        </td>
+        Universo: <td data-name="universo">
+            <select name="universo" id="universo">
+            </select>
+        </td>
+        <button>ADD</button>
+    </form>
+    <br><button id="salvar" class="btn btn-primary float-right" type="submit">Salvar Heroi</button>
+
+</body>
+
+<script>
+    var consultaDB = 0;
+
+    $(document).ready(function () {
+        if (consultaDB == 0) {
+            getPoderes();
+            getUniversos();
+        }
+        consultaDB = 1;
+    })
+
+    function getPoderes() {
+        $.ajax({
+            type: "GET",
+            url: 'http://localhost:8080/api/poder',
+            async: false,
+            success: function (results) {
+                results.map(({
+                    id,
+                    nome
+                }) => {
+                    $('#poder').append(`<option value='${id}'>${nome}</option>`);
+                });
+            }
+        });
+    }
+    function getUniversos() {
+        $.ajax({
+            type: "GET",
+            url: 'http://localhost:8080/api/universo',
+            async: false,
+            success: function (results) {
+                results.map(({
+                    id,
+                    nome
+                }) => {
+                    $('#universo').append(`<option value='${id}'>${nome}</option>`);
+                });
+            }
+        });
+    }
+    $('#salvar').on("click", function () {
+        var nome = document.getElementById("nome").value; 
+        if(nome == ""){
+            alert("CAMPO NOME É OBRIGATÓRIO")
+            return; 
+        }
+        var poder = $('#poder').val()
+        var universo = $('#universo').val()
+        var jsonHeroi = {
+            "nome": nome, 
+            "universo_id": universo,
+            "poderes": [
+                {"poder_id": poder}
+            ],
+        }
+        salvarHeroi(jsonHeroi); 
+    });
+    function salvarHeroi(json) {
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/api/heroi",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(json),
+
+            success: function (data) {
+                console.log("sucesso");
+                console.log(data);
+            },
+            statusCode: {
+                404: function () {
+                    alert("404");
+                }
+            },
+            error: function (xhr) {
+                console.log("> error: ", xhr.responseText);
+            },
+            complete: function () {
+                console.log("complete");
+            }
+
+        });
+    }
+
+</script>
+
+</html>
